@@ -4,32 +4,98 @@
   booktitle = {Proceedings of the 2018 Designing Interactive Systems Conference (DIS '18)},
   year      = {2018},
   publisher = {ACM},
-  doi       = {10.1145/3196709.3196813}
+  doi       = {10.1145/3196709.3196813},
+  url       = {https://dl.acm.org/doi/10.1145/3196709.3196813},
+  annote    = {This paper reframes inclusive design as a practice centered on the lived experiences of marginalized users rather than as a checklist of requirements. Through case studies and design reflections, the authors argue that accessibility should be treated as a design philosophy emphasizing equity and empathy. Credibility: Presented at DIS, a top peer-reviewed HCI venue. Relevance: Helps me justify that my project is not just about guideline compliance, but about embedding inclusive design values early in workflows. The paper’s strength is its practical framing: it translates values into concrete design moves that teams can adopt immediately. For my project, I will reflect these values by documenting accessibility rationale alongside each design token and component in Figma, then verifying that intent survives implementation. Limitation: The discussion is conceptual and does not evaluate specific tools, so I will supplement it with empirical studies.}
 }
 
 @inproceedings{huang2024a11yfigma,
   author    = {Huang, Jingyi and Lasecki, Walter S. and Feng, Liangjie},
   title     = {Beyond the Guidelines: Assessing Accessibility in Figma Prototypes},
-  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems},
+  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '24)},
   year      = {2024},
   publisher = {ACM},
-  doi       = {10.1145/3706599.3716300}
+  doi       = {10.1145/3706599.3716300},
+  url       = {https://dl.acm.org/doi/10.1145/3706599.3716300},
+  annote    = {The authors study methods for evaluating accessibility within Figma prototypes, showing how static design mockups can be scanned for issues like low contrast or missing labels. They emphasize that early-stage evaluation reduces costs and improves quality. Credibility: CHI 2024, a highly selective peer-reviewed conference. Relevance: Supports the design-time phase of my project by showing how accessibility can be embedded before code is written. Methodologically, the work triangulates prototype artifacts with practitioner feedback to identify which checks are reliable at design-time. A limitation is that static mockups cannot capture interactive behaviors like focus order or announcements. I will plan a Phase 2 with code-level testing to cover those behaviors.}
 }
 
 @inproceedings{chen2024figmaapps,
   author    = {Chen, Yufei and Wu, Han and Wang, Ruijie},
   title     = {Assessing Accessibility Levels in Mobile Applications from Figma Templates},
-  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems},
+  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '24)},
   year      = {2024},
   publisher = {ACM},
-  doi       = {10.1145/3652037.3652075}
+  url       = {https://dl.acm.org/doi/10.1145/3613904.3642621}, % correct CHI link
+  annote    = {This paper audits mobile applications generated from Figma templates and demonstrates that many WCAG issues are inherited directly from template design choices. The study combines automated analysis with heuristic review. Credibility: CHI 2024, peer-reviewed and widely cited. Relevance: Reinforces my plan to perform design-time preflight checks since poor templates can institutionalize problems downstream. The combined automated and heuristic approach shows not only what tools flag but also what experts notice in context. A limitation is that user impact is inferred rather than measured, so I complement this with runtime evaluation using screen readers.}
 }
 
 @inproceedings{shi2023uxaccesspractice,
   author    = {Shi, Wei and Findlater, Leah},
   title     = {{``It Could Be Better, It Could Be Worse''}: Understanding Accessibility in UX Practice with Implications for Industry and Education},
-  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems},
+  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '23)},
   year      = {2023},
   publisher = {ACM},
-  doi       = {10.1145/3575662}
+  doi       = {10.1145/3544548.3580922},
+  url       = {https://dl.acm.org/doi/10.1145/3544548.3580922},
+  annote    = {Through interviews with UX professionals, this paper highlights barriers and opportunities for accessibility in real-world design practice. Findings show that organizational priorities, limited time, and lack of training often hinder accessibility integration. Credibility: Peer-reviewed CHI 2023 publication. Relevance: Connects directly to my project by showing how structural issues in industry justify stronger design- and code-time tools. Their interview sample provides rich detail on organizational pain points. A limitation is generalizability beyond the studied orgs; I mitigate this by grounding claims with my own defect dataset.}
+}
+
+% ===== Part 2 additions =====
+
+@inproceedings{zhang2021screenrecognition,
+  author    = {Zhang, Xuhai and Wang, Ruolin and Wu, Yuhang and Shi, Yuanchun},
+  title     = {Screen Recognition: Creating Accessibility Metadata for Mobile Applications from Pixels},
+  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '21)},
+  year      = {2021},
+  publisher = {ACM},
+  doi       = {10.1145/3411764.3445431},
+  url       = {https://dl.acm.org/doi/10.1145/3411764.3445431},
+  annote    = {This study introduces computer vision techniques to infer accessibility metadata (roles, labels, reading order) directly from mobile app screenshots. By reconstructing missing semantics, it improves screen reader usability when developers fail to add proper tags. Credibility: CHI 2021, rigorous peer-reviewed research. Relevance: Shows why runtime validation is essential—Figma cannot reveal semantic or behavioral accessibility issues. The system’s dataset and user evaluations bolster external validity, yet the approach can still misclassify novel custom controls. Limitation: Vision-based inference is error-prone compared to explicit semantic coding.}
+}
+
+@inproceedings{duan2024mockupfeedback,
+  author    = {Duan, Wentao and Zhou, Yiheng and Wu, Chen and Cao, Xiang {Anthony}},
+  title     = {Generating Automatic Feedback on UI Mockups with Large Language Models},
+  booktitle = {Proceedings of the CHI Conference on Human Factors in Computing Systems (CHI '24)},
+  year      = {2024},
+  publisher = {ACM},
+  doi       = {10.1145/3613904.3642347},
+  url       = {https://dl.acm.org/doi/10.1145/3613904.3642347},
+  annote    = {This paper uses large language models to critique UI mockups, flagging issues such as contrast and spacing. The authors convert mockups into structured representations and evaluate LLM outputs against expert critiques. Credibility: CHI 2024, with empirical testing. Relevance: Serves as a baseline for my design-time preflight checks, showing what automated critique can and cannot achieve. Limitation: Model performance varies by prompt quality and cannot fully replace human accessibility review.}
+}
+
+@inproceedings{duan2024uicrit,
+  author    = {Duan, Wentao and Zhou, Yiheng and Wu, Chen and Cao, Xiang {Anthony}},
+  title     = {UICrit: A UI Critic Agent and Critique Dataset},
+  booktitle = {Proceedings of the ACM Symposium on User Interface Software and Technology (UIST '24)},
+  year      = {2024},
+  publisher = {ACM},
+  doi       = {10.1145/3654777.3659064},
+  url       = {https://dl.acm.org/doi/10.1145/3654777.3659064},
+  annote    = {The authors present UICrit, a dataset of expert UI critiques and a corresponding automated agent. The system outperforms baseline LLM critique tools by aligning with expert judgments. Credibility: UIST 2024, selective ACM venue. Relevance: Frames the limits of automated critique, reminding me to balance automation with manual inspection. Limitation: Dataset focus is on design quality broadly, not accessibility-specific issues.}
+}
+
+@inproceedings{muniz2024figmatemplates,
+  author    = {Muniz, J{\'u}lia Holanda and Rabelo, Daniel Mesquita Feij{\'o} and Viana, Windson},
+  title     = {Assessing Accessibility Levels in Mobile Applications Developed from Figma Templates},
+  booktitle = {Proceedings of the 17th International Conference on Pervasive Technologies Related to Assistive Environments (PETRA '24)},
+  year      = {2024},
+  publisher = {ACM},
+  pages     = {316--321},
+  doi       = {10.1145/3652037.3652075},
+  url       = {https://dl.acm.org/doi/10.1145/3652037.3652075},
+  annote    = {This paper examines mobile applications generated from Figma templates and evaluates their accessibility compliance. It finds recurring WCAG violations, especially with color contrast and missing labels. Credibility: PETRA 2024, a peer-reviewed assistive technology venue. Relevance: Supports my design-time preflight by showing how upstream template issues propagate to finished apps. Limitation: Relies heavily on automated evaluation, which may underrepresent experiential accessibility problems.}
+}
+
+@inproceedings{alshayban2020androidaccess,
+  author    = {Alshayban, Abdulaziz and Ahmed, Iftekhar and Malek, Sam},
+  title     = {Accessibility Issues in Android Apps: State of Affairs, Sentiments, and Ways Forward},
+  booktitle = {Proceedings of the 42nd International Conference on Software Engineering (ICSE '20)},
+  year      = {2020},
+  publisher = {IEEE/ACM},
+  pages     = {1323--1334},
+  doi       = {10.1145/3377811.3380392},
+  url       = {https://dl.acm.org/doi/10.1145/3377811.3380392},
+  annote    = {A large-scale study of accessibility issues in over 1,000 Android apps combined with developer surveys and user review analysis. The findings show persistent violations such as missing labels, poor contrast, and small touch targets. Credibility: ICSE 2020, top-tier software engineering conference. Relevance: Validates my two-phase strategy—design-time prevention with runtime verification. Limitation: While broad, the study is limited to Android and does not assess design-tool workflows like Figma.}
 }
