@@ -1,25 +1,51 @@
-# Shift-Left Accessibility for UX/UI: A Figma Preflight vs. Code-Time Checks (Pilot)
-This project tests whether a quick design-time accessibility preflight in Figma can catch issues earlier than fixing them after the site is built. I will design two screens (Home + Register), run a 5-item preflight, then build the same screens in code and test with keyboard, VoiceOver, Lighthouse, and axe.
+# A11y Preflight: Shift-Left Accessibility in Figma
 
-## Feature Calendar
+This project explores whether accessibility evaluation during the **design phase** can reduce downstream accessibility issues normally found during development or deployment. The work focuses on developing an early-accessibility-checking Figma plugin and testing its effect on design decisions and usability outcomes.
 
-| **Feature / Task** | **Due date** | **Notes** |
-| --- | --- | --- |
-| [Set Up Figma File (Pages & Structure)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/1) | 9/18/25 | Create pages: 00 Foundations, 10 Components, 20 Screens, 90 A11y Annotations |
-| [Define Design Tokens (Color, Type, Spacing, Focus)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/2) | 9/25/25 | Add tokens frame; document contrast and focus-ring spec |
-| [Build Button Component (5 States)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/3) | 10/3/25 | Default / Hover / **Focus** / Active / Disabled |
-| [Build Text Input Component (4 States)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/4) | 10/15/25 | Error shows red border + error line; others hide error line |
-| [Compose Home Screen (Landmarks + Skip Link)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/5) | 10/17/25 | Header / Nav / Main / Footer; visible skip link at top |
-| [Compose Register Screen (Labels, Hints, Errors)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/6) | 10/30/25 | Labels above inputs; hint text; error placement |
-| [Annotate & Run Design Preflight (Log to CSV)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/7) | 11/13/25 | Focus order, headings, roles/names; log issues + minutes |
-| [Implement Site Shell (index/register/styles/app)](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/8) | 11/30/25 | Semantic HTML + skip link + basic CSS/JS |
+This project is part of the Junior Independent Study in Computer Science at The College of Wooster.
 
+---
 
-## Stretch (if time permits)| [Code A11y Pass: Semantics, Keyboard, Focus](https://github.com/Noelynn-Faith-Batalingaya/Junior-Independent-Study/issues/9)| Labels/`aria-describedby`, `:focus-visible`, no traps |
+## Purpose
 
-| **Feature / Task (Stretch)** | **Due date** | **Notes** |
-| --- | --- | --- |
-| Table Pattern (caption + `scope`) | if time permits | Accessible table with caption and header cells (`scope="col/row"`) |
-| Alt-Text Mini Guide | if time permits | 6–8 examples (good vs. poor) for your UI images |
-| Reduced Motion + Dark Tokens | if time permits | `prefers-reduced-motion` CSS + dark theme color tokens |
-| Automation (Pa11y / jest-axe) | if time permits | Local script to catch regressions quickly |
+Accessibility is often checked too late in the development process—after UI implementation or right before launch. At that stage, issues are expensive to fix and often ignored, leading to accessibility debt.
+
+This project applies a **Shift-Left approach**, meaning accessibility validation occurs **during the design phase**, not after coding.  
+The goal is to support:
+
+- Earlier accessibility awareness  
+- Reduced rework  
+- More inclusive UX/UI outcomes  
+- Improved accessibility literacy among student designers  
+
+---
+
+## Research Question
+
+> Does running accessibility checks in Figma during the design stage reduce downstream accessibility issues compared to code-level evaluation alone?
+
+---
+
+## Features
+
+The **A11y Preflight** plugin evaluates:
+
+- Color contrast  
+- Missing or insufficient alt text  
+- Touch target sizing  
+- Keyboard focus visibility  
+- Color-dependent meaning  
+
+Each result includes concise WCAG-aligned educational feedback rather than only pass/fail rules.
+
+---
+
+## Project Contents
+
+```text
+src/                → Plugin source code (TypeScript)
+docs/               → Final paper and presentation
+imgs/               → Screenshots and plugin visuals
+README.md           → Documentation (this file)
+main.pdf/tex        → Final academic paper
+bibliography.bib    → References for research
