@@ -4,7 +4,6 @@ This project explores whether accessibility evaluation during the **design phase
 
 This project was completed as part of the Junior Independent Study in Computer Science at The College of Wooster.
 
----
 
 ## Purpose
 
@@ -17,13 +16,10 @@ This project applies a **Shift-Left approach**, meaning accessibility validation
 - More inclusive UX/UI outcomes  
 - Improved accessibility literacy among student designers  
 
----
-
 ## Research Question
 
 > Does running accessibility checks in Figma during the design stage reduce downstream accessibility issues compared to code-level evaluation alone?
 
----
 
 ## Features
 
@@ -37,8 +33,6 @@ The **A11y Preflight** plugin currently evaluates:
 
 Each flagged item includes brief WCAG-aligned educational guidance rather than only a pass/fail status.
 
----
-
 ## Project Contents
 
 - `src/` — Plugin source code (TypeScript)  
@@ -48,7 +42,6 @@ Each flagged item includes brief WCAG-aligned educational guidance rather than o
 - `main.pdf/tex` — Final academic paper  
 - `bibliography.bib` — Academic citations and references  
 
----
 
 ## How to Run the Plugin (Development Mode)
 
@@ -60,18 +53,16 @@ Each flagged item includes brief WCAG-aligned educational guidance rather than o
 
 The plugin will display results in the UI panel and optionally export a JSON report.
 
----
-
 ## Project Timeline & Feature Completion
 
 | Feature / Task | Due Date | Status | Notes |
 |----------------|----------|--------|-------|
-| Set up Figma structure | 9/18/25 | ✔ | Pages + annotation layout |
-| Define design tokens | 9/25/25 | ✔ | Color, typography, spacing |
-| Build button + input components | 10/3–10/15 | ✔ | Includes hover + focus states |
-| Create UI screens (Home + Register) | 10/17–10/30 | ✔ | Completed and annotated |
-| Run accessibility preflight | 11/13/25 | ✔ | Logged to CSV |
-| Implement HTML site shell | 11/30/25 | ✔ | Semantic HTML + a11y |
+| Set up Figma structure | 9/18/25 | ✔️| Pages + annotation layout |
+| Define design tokens | 9/25/25 | ✔️ | Color, typography, spacing |
+| Build button + input components | 10/3–10/15 | ✔️ | Includes hover + focus states |
+| Create UI screens (Home + Register) | 10/17–10/30 | ✔️ | Completed and annotated |
+| Run accessibility preflight | 11/13/25 | ✔️ | Logged to CSV |
+| Implement HTML site shell | 11/30/25 | ✔️ | Semantic HTML + a11y |
 
 ---
 
