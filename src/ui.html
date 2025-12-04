@@ -1,0 +1,89 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  body { font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 12px; color:#222; }
+  button { padding: 6px 10px; border: 1px solid #ccc; background: #fafafa; border-radius: 6px; cursor: pointer; }
+  .row { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .item { border:1px solid #eee; padding:8px; border-radius:8px; margin-bottom:8px; background:#fff; }
+  .fail { color:#b00020; font-weight:600; }
+  .warn { color:#8a6d3b; font-weight:600; }
+  .meta { color:#666; }
+  .list { max-height: 320px; overflow:auto; border:1px solid #eee; padding:6px; border-radius:8px; background:#fafafa; }
+  .btns { display:flex; gap:6px; margin-top:6px; }
+</style>
+
+<div class="row" role="group" aria-label="Plugin controls">
+  <button id="run">Run checks</button>
+  <button id="export">Export JSON</button>
+  <button id="close">Close</button>
+</div>
+
+<div id="summary" class="meta" role="status" aria-live="polite">No results yet.</div>
+<div class="list" id="list" role="region" aria-label="Scan results"></div>
+
+<script>
+  var list = document.getElementById('list');
+  var summary = document.getElementById('summary');
+
+  document.getElementById('run').onclick = function () {
+    parent.postMessage({ pluginMessage: { type:'run-checks' } }, '*');
+  };
+  document.getElementById('close').onclick = function () {
+    parent.postMessage({ pluginMessage: { type:'close' } }, '*');
+  };
+  document.getElementById('export').onclick = function () {
+    var data = window.__lastResults || null;
+    if (!data) { alert('Run checks first.'); return; }
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = 'a11y-report.json'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  onmessage = function (e) {
+    var msg = e && e.data && e.data.pluginMessage ? e.data.pluginMessage : null;
+    if (!msg || msg.type !== 'results') return;
+
+    window.__lastResults = msg;
+    var findings = Array.isArray(msg.findings) ? msg.findings : [];
+    var file = msg.file || '';
+    var page = msg.page || '';
+    summary.textContent = findings.length + ' findings • File: ' + file + ' • Page: ' + page;
+
+    list.innerHTML = '';
+    if (!findings.length) {
+      list.innerHTML = '<div class="meta">No issues found — nice work!</div>';
+      return;
+    }
+
+    findings.forEach(function (f) {
+      var div = document.createElement('div');
+      div.className = 'item';
+      var sev = (f.severity === 'FAIL') ? 'fail' : 'warn';
+      div.innerHTML =
+        '<div><span class="'+sev+'">'+ (f.rule || '').toUpperCase() +' — '+ (f.severity || '') +'</span></div>' +
+        '<div>'+ (f.nodeName || '') +' <span class="meta">('+(f.nodeId || '')+')</span></div>' +
+        '<div class="meta">Value: '+ (f.value || '') +' • Threshold: '+ (f.threshold || '') +'</div>' +
+        '<div class="meta">Page: '+ (f.page || '') +'</div>' +
+        '<div class="btns">' +
+          '<button class="sel" data-id="'+(f.nodeId||'')+'">Select in canvas</button>' +
+          (f.severity === 'FAIL' ? '<button class="fix" data-id="'+(f.nodeId||'')+'" data-rule="'+(f.rule||'')+'">Fix</button>' : '') +
+        '</div>';
+
+      // Select
+      div.querySelector('.sel').onclick = function () {
+        parent.postMessage({ pluginMessage: { type:'select-node', nodeId: f.nodeId }}, '*');
+      };
+
+      // Fix (only for FAIL)
+      var fixBtn = div.querySelector('.fix');
+      if (fixBtn) {
+        fixBtn.onclick = function () {
+          parent.postMessage({ pluginMessage: { type:'fix', nodeId: f.nodeId, rule: f.rule }}, '*');
+        };
+      }
+
+      list.appendChild(div);
+    });
+  };
+</script>
