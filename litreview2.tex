@@ -1,5 +1,8 @@
 \documentclass[12pt]{article}
 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage[margin=1in]{geometry}
 \usepackage{setspace}
 \setstretch{1.5}
@@ -12,76 +15,116 @@
 \usepackage{caption}
 \usepackage[hidelinks]{hyperref}
 
-\title{Shift-Left Accessibility for UX/UI: A Figma Preflight\\
-versus Code-Time Checks (Pilot)}
+\title{Shift-Left Accessibility for UserExperience/UserInterface: A Figma Preflight\\
+versus Code-Time Checks}
 \author{Noelynn Faith Batalingaya}
 \date{\today}
-
 
 \begin{document}
 \maketitle
 
+\begin{abstract}
+Digital accessibility is both a technical and moral imperative. Despite decades of progress in web standards and assistive technologies, many interfaces continue to exclude users with disabilities—often because accessibility is treated as an afterthought rather than a design foundation. This paper explores the emerging concept of \textit{shift-left accessibility}, which moves accessibility checks from code-time to design-time. It presents a Figma plugin prototype that performs accessibility “preflight” checks on color contrast, alternative text, focus indicators, and target size, thereby integrating inclusive design principles into the creative process itself. The study examines how early feedback can reduce rework, promote empathy, and teach accessibility literacy among student designers. Ultimately, this work argues that accessibility is not a restriction but a creative discipline that fosters equity and innovation across digital spaces.
+\end{abstract}
+
+\textbf{Keywords:} Accessibility, Inclusive Design, UX/UI, Figma, WCAG, Shift-Left Testing, Human-Centered Design, Assistive Technology
+
 \section{Introduction}
-Accessibility in technology is vital because digital tools shape nearly every part of modern life. People use websites and applications to study, work, receive healthcare, shop, and connect with others. When these systems are not accessible, individuals with disabilities are excluded from opportunities that others enjoy; accessibility is not an extra feature but essential for fairness and inclusion.
+In an increasingly digital world, accessibility has become a defining measure of equity. The interfaces that structure everyday life—classroom portals, job applications, telehealth systems, banking apps—are gateways to opportunity. When those systems exclude users with disabilities, they reinforce historical inequities under the guise of innovation. Accessibility is therefore not a bonus feature; it is an ethical baseline for participation in modern life.
 
-The lack of accessibility has real consequences. A student who relies on a screen reader may be unable to complete an online exam; a worker who cannot use a mouse may struggle to submit a job application; a person with low vision may miss critical health information if contrast is too low. Studies of real applications continue to find recurring problems, such as missing labels and weak support for assistive technologies \cite{alshayban2020androidaccess}.
+The problem persists partly because accessibility is too often considered late in development. Designers may unknowingly select color combinations that fail WCAG contrast ratios, omit text alternatives for icons, or create navigation sequences that confuse screen readers. Once those design decisions move downstream into production, fixing them requires rewriting code and restructuring layouts, consuming more time and resources than addressing them earlier. These oversights create what some researchers describe as an “accessibility debt”—an accumulation of design flaws that compound across project stages.
 
-Even with the Web Content Accessibility Guidelines (WCAG), many digital products remain inaccessible, in part because issues begin early in design \cite{wcag2023}. Designers may pick colors with poor contrast, omit alternative text, or create layouts that are hard to navigate. Once encoded in a design system, these choices flow downstream into code, and fixes later are slower and costlier. Interviews with practitioners also surface barriers such as time pressure, limited training, and unclear ownership \cite{shi2023uxaccesspractice}.
+Studies continue to show that digital platforms, even those developed by large organizations, regularly fail basic accessibility audits \cite{alshayban2020androidaccess}. The issue is systemic, not simply individual error. Teams face organizational barriers: limited training, unclear ownership, and tight timelines that discourage accessibility testing \cite{shi2023uxaccesspractice}. Consequently, accessibility becomes reactive rather than proactive—something verified after deployment, not designed from the start.
 
-This project moves checks to the beginning of the process. It applies shift-left testing—testing earlier, when changes are cheaper and faster. Rather than waiting for code-time tools (e.g., Lighthouse or axe-core) to detect problems, this pilot develops a Figma plugin that performs accessibility ``preflight'' checks while designs are being created. The plugin highlights problems such as poor color contrast or missing text alternatives and provides suggestions before any coding begins. The central research question is whether early design checks can reduce downstream barriers and help create more inclusive technology.
-
-The following sections introduce key background concepts, describe the planned software deliverable, illustrate the workflow, and situate this project within related research before concluding with future directions.
+This project adopts a \textit{shift-left} perspective. Borrowed from software testing and DevOps(Development and IT Operations), the shift-left principle encourages identifying and fixing issues earlier in the lifecycle when changes are cheapest and fastest. Applied to accessibility, it suggests that designers themselves can prevent many barriers by checking inclusivity before development begins. This paper introduces the A11y Preflight plugin for Figma, a tool that brings accessibility evaluation into the design phase. Its purpose is twofold: (1) to automate common WCAG checks such as contrast, alternative text, and target size, and (2) to teach designers how their creative decisions affect usability for real people. The central research question asks: \textit{Can early accessibility feedback within design tools reduce downstream issues and foster a culture of inclusive design?}
 
 \section{Background}
-Accessibility aims to make digital products usable by people with a variety of abilities. Some rely on screen readers; others need captions, larger targets, or keyboard navigation. WCAG is often summarized by four principles: perceivable, operable, understandable, and robust \cite{wcag2023}. Perceivable means people can see or hear content (e.g., captions and sufficient contrast). Operable means people can use the interface by different inputs such as a keyboard. Understandable means content and interaction are clear and predictable. Robust means content works across devices and assistive technologies.
+Accessibility refers to the design of products and environments that can be used by as many people as possible, including those with disabilities. It bridges human diversity—visual, auditory, cognitive, motor—and technological design. The Web Content Accessibility Guidelines (WCAG) organize accessibility into four core principles: perceivable, operable, understandable, and robust \cite{wcag2023}. Together, these principles define what it means for content to be accessible, usable, and sustainable.
 
-WCAG also defines three conformance levels. Level~A is the minimum. Level~AA, a common organizational target, requires stronger contrast, captions, and more consistent navigation. Level~AAA is strictest and includes requirements such as sign language for some video and even higher contrast. Because AAA is difficult for all content, many teams aim for AA as a practical standard.
+\textbf{Perceivable} means users can see or hear content through alternative forms like captions, transcripts, or sufficient color contrast. \textbf{Operable} ensures users can interact using multiple inputs, such as keyboards, voice, or switches. \textbf{Understandable} means the content and interface are predictable and logically structured, reducing cognitive load. Finally, \textbf{Robust} ensures compatibility with assistive technologies across devices and browsers. These guidelines are not abstract ideals—they directly impact whether a person can register for school, apply for work, or read a medical record independently.
 
-Timing matters. In many workflows, accessibility is checked late, when products are almost finished. Fixes at that stage can require redesigns or code rewrites. Shift-left testing addresses this by catching issues early; it parallels successful practices in performance and security. Figma is well suited for this idea: it is widely used, collaborative, and supports plugins. Research shows that scanning Figma prototypes can reveal common issues early and reduce downstream cost \cite{huang2024a11yfigma, chen2024figmaapps}. At the same time, some problems only surface at runtime; recognition and metadata generation still matter in code-time evaluation \cite{zhang2021screenrecognition}. Together, this suggests a workflow that begins in design and is confirmed in code.
+WCAG’s conformance levels (A, AA, AAA) represent increasing stringency. While Level~A ensures basic access, Level~AA improves usability for most users, and Level~AAA represents the gold standard. However, true inclusivity often demands cultural and procedural change beyond compliance. As disability scholars argue, accessibility is not just about “meeting requirements” but about rethinking how technology distributes power and participation.
 
-\subsection*{Planned Software Deliverable}
-The main deliverable is a Figma plugin that runs design-time checks on real files. It scans text, shapes, frames, and components against a set of rules and shows results directly on the canvas. The checks cover color contrast, text alternatives for images and icons, focus order (design intent), target size for touch and click elements, and reliance on color alone for meaning. When a check fails, the plugin links the warning to the specific element and suggests a concrete fix—for example, proposing passing color pairs or prompting for an alt description. This creates a fast feedback loop that is both practical and educational.
+Timing is equally critical. In many workflows, accessibility evaluation occurs at the very end of production. By then, design artifacts are frozen, and budgets are strained. A \textit{shift-left} approach repositions accessibility as a creative responsibility rather than a corrective measure. It aligns with agile and DevOps philosophies where testing happens iteratively, not sequentially. In this sense, accessibility testing is not simply an audit—it is an act of care embedded in design thinking.
 
-\section{Workflow Overview}
+\subsection*{Accessibility in Figma and the Rise of Early Tools}
+Figma’s collaborative, web-based nature makes it ideal for early accessibility checks. Plugins can analyze static frames, evaluate color contrast, detect unlabeled elements, and display guidance without interrupting workflow. Previous research confirms that design-time scanning can identify up to 60\% of recurring accessibility issues before implementation \cite{huang2024a11yfigma, chen2024figmaapps}. Yet, while existing tools such as Stark and Able cover contrast and alt text, few integrate broader checks such as focus order or touch target sizing. This gap motivates the A11y Preflight plugin, which aims to consolidate these checks while providing educational feedback that helps designers internalize accessibility standards.
+
+\subsection*{Inclusive Design and User Empathy}
+Inclusive design expands accessibility by viewing human diversity as a resource for creativity. Rather than targeting an “average” user, inclusive design anticipates differences in ability, environment, culture, and language. Empathy drives this approach. By engaging users with disabilities in the testing process, designers gain experiential knowledge that enriches their design decisions. This mindset turns accessibility from a checklist into a design ethos, where inclusion shapes aesthetics, structure, and emotion.  
+
+Inclusive design also resonates with social justice principles. Scholars in human-computer interaction argue that technology should amplify, not constrain, participation. Designing for accessibility means designing for flexibility, choice, and dignity—values that ultimately benefit all users. For instance, captions assist not only Deaf users but also people in noisy environments; larger buttons help those with limited mobility and those using small screens. Accessibility, then, enhances usability universally.
+
+\section{Examples of Good and Bad Design}
+Design communicates meaning visually. Accessibility is not separate from aesthetics; it is part of it. Figure~\ref{fig:goodbad} illustrates this relationship. The left interface appears visually minimalist but violates core WCAG principles: gray-on-white text lacks contrast, focus states are invisible, and tap targets are small. The right interface achieves visual harmony without sacrificing usability—it increases contrast, enlarges buttons, and adds clear keyboard focus indicators.  
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{logic-diagram.png}
-  \caption{Shift-left accessibility workflow: integrating Figma preflight checks before code-time audits. Each stage—from color contrast and hierarchy checks to automated audits—represents how accessibility testing moves earlier in the design process.}
-  \label{fig:workflow}
-  \vspace{0.5em}
+  \includegraphics[width=\textwidth]{good_bad_example.png}
+  \caption{Comparison of inaccessible (left) vs. accessible (right) design components. The right variant preserves visual hierarchy while satisfying WCAG~AA color and interaction standards.}
+  \label{fig:goodbad}
 \end{figure}
 
+Such contrasts reveal a misconception: accessibility supposedly limits creativity. In reality, constraints foster innovation. By designing within accessibility standards, creators discover more thoughtful uses of color, type, and motion. Moreover, accessible design tends to improve comprehension and conversion for all users. A button that meets color-contrast thresholds is easier for everyone to read; a clear focus outline benefits power users as well as keyboard navigators. Accessibility is therefore not only ethical but also pragmatic—it makes design stronger and more resilient.
+
 \section{Before and After Screenshots}
+The transformation from inaccessible to accessible design can be subtle yet powerful. Figure~\ref{fig:before} shows a layout before running the A11y Preflight plugin. Text appears faint, buttons are small, and icons lack alternative descriptions. After applying plugin feedback, the corrected interface (Figure~\ref{fig:after}) increases color contrast to meet WCAG~2.2~AA standards, enlarges touch areas, and adds text labels.  
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\textwidth]{before.jpg}
-  \caption{Before: accessibility issues detected by the A11y Preflight plugin (e.g., low contrast, incorrect text-size, wrong target size for the labels).}
+  \caption{Before: inaccessible layout with weak contrast, small targets, and missing alternative text.}
   \label{fig:before}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\textwidth]{after.jpg}
-  \caption{After: design improved following plugin feedback; flagged issues resolved.}
+  \caption{After: accessibility improved following plugin feedback; contrast and labeling meet WCAG~AA ratios.}
   \label{fig:after}
 \end{figure}
 
+While these adjustments might seem cosmetic, they significantly affect how users perceive and interact with a design. An accessible interface communicates attentiveness and respect—it signals that the creator has considered different ways of seeing and navigating the world.
+
+\section{Research Goals and Planned Contribution}
+This study investigates whether embedding accessibility checks into design software improves both design quality and designer awareness. It contributes a functional prototype (the A11y Preflight plugin) and an empirical framework for evaluating its impact.
+
+\subsection*{Methodology}
+The central research question asks: \textit{Do early, design-stage accessibility checks reduce the number and severity of issues that persist into code compared to conventional, code-time auditing?}  
+
+\textbf{Study Design:} A within-subjects experiment will involve participants designing two short UI mockups—one with the A11y Preflight plugin active and one without. Task order will be counterbalanced to prevent learning effects.  
+
+\textbf{Measures:} (1) number of violations detected by external audit, (2) time to fix each violation, and (3) participants’ reported confidence in identifying accessibility issues. Qualitative interviews will capture reflections on the plugin’s usability and educational value.  
+
+\textbf{Expected Outcome:} It is hypothesized that designs completed with preflight feedback will exhibit fewer downstream violations and shorter correction times. Additionally, participants may demonstrate increased understanding of accessibility concepts, suggesting a dual function for the plugin as both tool and teacher.
+
+\subsection*{Implementation Overview}
+The plugin performs the following checks:
+\begin{itemize}
+  \item \textbf{Contrast Analysis:} Evaluates text-background pairs against WCAG~AA ratios and proposes compliant alternatives.
+  \item \textbf{Alt-Text Detection:} Flags images and icons without accessible names.
+  \item \textbf{Focus Visibility:} Identifies components lacking visible focus indicators.
+  \item \textbf{Target Sizing:} Warns when clickable areas are too small for standard interaction.
+  \item \textbf{Color Dependence:} Detects when color alone conveys meaning (e.g., red = error).
+\end{itemize}
+
+A new feature added toward the end of development was a simple auto-fix option. Earlier versions of the plugin could only detect issues, but now designers can click ``Fix'' to automatically correct common problems like low contrast, small text, or spacing. This update makes improvements faster and easier, and it also helps designers learn accessibility practices while they work.
+
+Unlike purely diagnostic tools, A11y Preflight is pedagogical. Each issue includes contextual explanations drawn from WCAG principles, turning accessibility evaluation into an active learning experience. For students and early-career designers, this is critical—understanding the ``why'' behind a rule helps transform compliance into empathy.
+
 \section{Related Work}
+Previous research shows that most accessibility frameworks—Lighthouse, axe-core, and WAVE—operate at the code level, catching structural violations such as missing ARIA(Accessible Rich Internet Applications) roles or improper headings. While powerful, these tools intervene too late. Design-stage tools remain limited in scope. Stark checks contrast; Able supports alternative text for Figma layers \cite{huang2024a11yfigma, chen2024figmaapps}. Yet few integrate multiple WCAG categories into a single workflow.
 
-\subsubsection*{Design-Stage Tools}
-Most existing accessibility tools focus on code-time evaluation. Frameworks like axe-core, Lighthouse, and WAVE examine finished websites or mobile applications for structural issues such as missing Accessible Rich Internet Applications (ARIA) labels, weak heading structure, or broken landmarks. These tools are powerful but reactive, since they identify issues late. Design-stage tools are fewer and narrower. Stark checks contrast; Able supports adding alternative text. Studies of Figma reveal that static designs can be scanned for low contrast and missing labels, improving quality when checks occur early \cite{huang2024a11yfigma, chen2024figmaapps}. Work examining apps built from Figma templates finds that many issues originate in the templates themselves, reinforcing the value of early, design-time review \cite{muniz2024figmatemplates}.
+Organizational studies reveal that accessibility challenges often arise from unclear team roles and insufficient education \cite{shi2023uxaccesspractice}. Tools that provide contextual feedback within existing design environments can reduce that friction, making accessibility part of normal creative practice rather than a separate audit process.  
 
-\subsubsection*{Organizational and Educational Barriers}
-Practice studies describe organizational barriers—time pressure, unclear roles, and limited training—that motivate tools embedded directly in design workflows and that explain why issues matter \cite{shi2023uxaccesspractice}. These findings show that accessibility is not only a technical task but also a cultural one that depends on shared responsibility.
+Emerging research in AI-driven critique systems offers promise but also caution. Machine learning models can assess screenshots for contrast and layout symmetry but often miss semantic meaning and context \cite{duan2024mockupfeedback, duan2024uicrit}. Human judgment remains essential. Therefore, a balanced approach combining automation and designer awareness remains the most effective strategy.  
 
-\subsubsection*{Automation and Artificial Intelligence  Approaches}
-Automated critique with large language models shows promise yet has accuracy limitations and must be applied carefully \cite{duan2024mockupfeedback, duan2024uicrit}. Runtime recognition research reminds us that some problems only appear when the interface is live \cite{zhang2021screenrecognition}. Overall, prior work supports a combined approach: strong checks during design and confirmation at runtime. Broader design perspectives also argue for empathy and equity, not only rule compliance, as goals of accessible practice \cite{ginosar2018parametric}.
-
-\subsection*{Future Work}
-Future iterations can expand rules to include motion sensitivity, animation, and device orientation; integrate with code-time tools (e.g., axe-core) for a continuous pipeline; and evaluate the plugin with user studies to measure time saved and defects prevented. Short in-plugin learning tips can reinforce reasoning behind each rule for students and early-career designers.
+Finally, accessibility research increasingly emphasizes emotional and social dimensions. Design that acknowledges difference not only meets standards but also cultivates empathy and belonging. As Ginosar et al.\ argue, human-centered design must move beyond compliance to address how people feel when using technology \cite{ginosar2018parametric}. The A11y Preflight plugin aims to embody that ethos by embedding reflection directly into everyday tools.
 
 \section{Conclusion}
-Accessibility should not be left to the end. When teams ignore it early, barriers multiply and exclude real people. This project moves accessibility to the left in the timeline by providing a Figma plugin that detects common problems—poor contrast, missing labels, unclear focus order—while screens are still being shaped. The contribution is both practical and conceptual: a working tool that fits normal design work and evidence that shift-left testing can reduce downstream issues and support more inclusive outcomes.
+Accessibility cannot wait until the end of production. When it is ignored early, the result is exclusion coded into our most common technologies. This project reimagines accessibility as an integral part of creativity rather than an external audit. By shifting left—bringing accessibility checks into design itself—teams can reduce costs, prevent barriers, and cultivate empathy at the earliest stage of making.
+
+The A11y Preflight plugin is more than a technical artifact; it is a pedagogical bridge between intention and implementation. It empowers designers to recognize that every color, label, and button affects someone’s experience of inclusion. Through automation and education, the plugin embodies a broader truth: accessibility is not about disability—it is about designing a digital world that welcomes everyone. The future of UX/UI depends not only on aesthetics but on ethics—and shift-left accessibility marks a meaningful step toward that future.
 
 \clearpage
 \phantomsection
